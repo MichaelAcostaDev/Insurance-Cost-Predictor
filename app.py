@@ -82,7 +82,8 @@ def predict() -> tuple:
         service.append_prediction(validated, prediction)
     except ValueError as exc:
         return jsonify({"error": str(exc)}), 400
-    except Exception:  # pragma: no cover - safety net for unexpected errors
+    except Exception as exc:  # pragma: no cover - safety net for unexpected errors
+        app.logger.exception("Unhandled exception in /predict")
         return jsonify({"error": "Internal server error"}), 500
 
     return jsonify({"prediction": round(prediction, 2)})
